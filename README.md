@@ -3,7 +3,7 @@
 ![42ef9cb0-1afc-4e48-9dc2-c7a41f0a0182 (1)](https://github.com/user-attachments/assets/c9392543-264b-4455-bc99-e63c9557b3b6)
 
 
-is a modular, minimalist Waku bot that listens to real-world and on-chain content feeds and relays them into [Waku](https://waku.org/) content topics.
+Circadian is a modular, minimalist Waku bot that listens to real-world and on-chain content feeds and relays them into [Waku](https://waku.org/) content topics.
 
 Designed as a rhythmic bridge between decentralised messaging and the ever-changing web-curating signal from RSS, social, and Web3 event sources.
 
