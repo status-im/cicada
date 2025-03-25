@@ -1,4 +1,4 @@
-package cicadian
+package main
 
 import (
 	"context"
@@ -6,7 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/mmcdole/gofeed"
+	"github.com/status-im/cicadian/feeds"
+
 	waku "github.com/waku-org/go-waku/waku/v2/node"
 	"github.com/waku-org/go-waku/waku/v2/protocol/pb"
 )
@@ -30,33 +31,27 @@ func main() {
 	if err := wakuNode.Start(context.Background()); err != nil {
 		log.Fatalf("Failed to start Waku node: %v", err)
 	}
-
-	// Ensure the node stops when the application exits
 	defer wakuNode.Stop()
 
-	parser := gofeed.NewParser()
+	// Set up feeds
+	fs := []feeds.Feed{
+		feeds.NewRSSFeed(rssFeedURL),
+		// TODO: Add GitHubFeed, TwitterFeed, etc.
+	}
 	seen := make(map[string]bool)
 
 	for {
-		feed, err := parser.ParseURL(rssFeedURL)
-		if err != nil {
-			log.Println("Error fetching RSS feed:", err)
-			continue
-		}
-
-		for _, item := range feed.Items {
-			if !seen[item.GUID] {
-				seen[item.GUID] = true
+		for _, feed := range fs {
+			PollFeed(feed, seen, func(item feeds.FeedItem) {
 				publishToWaku(ctx, wakuNode, item)
-			}
+			})
 		}
-
 		time.Sleep(pollInterval)
 	}
 }
 
-func publishToWaku(ctx context.Context, node *waku.WakuNode, item *gofeed.Item) {
-	payload := fmt.Sprintf("Title: %s\nLink: %s\nPublished: %s", item.Title, item.Link, item.Published)
+func publishToWaku(ctx context.Context, node *waku.WakuNode, item feeds.FeedItem) {
+	payload := fmt.Sprintf("Title: %s\nLink: %s\nPublishedAt: %s", item.Title, item.Link, item.Timestamp)
 
 	ts := time.Now().UnixNano()
 	msg := &pb.WakuMessage{
@@ -66,10 +61,10 @@ func publishToWaku(ctx context.Context, node *waku.WakuNode, item *gofeed.Item) 
 		Timestamp:    &ts,
 	}
 
-	_, err := node.Relay().Publish(ctx, msg)
+	msgHash, err := node.Relay().Publish(ctx, msg)
 	if err != nil {
 		log.Println("Failed to publish to Waku:", err)
 	} else {
-		log.Println("Published to Waku:", item.Title)
+		log.Println("Published to Waku:", item.Title, msgHash)
 	}
 }
