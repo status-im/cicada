@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/status-im/cicadian/feeds"
@@ -13,7 +14,6 @@ import (
 )
 
 const (
-	rssFeedURL       = "https://blog.waku.org/rss/"
 	wakuContentTopic = "announcements"
 	pollInterval     = 5 * time.Minute
 )
@@ -34,8 +34,15 @@ func main() {
 	defer wakuNode.Stop()
 
 	// Set up feeds
+	// TODO these are a bit hardcoded but we can make this more flexible later
 	fs := []feeds.Feed{
-		feeds.NewRSSFeed(rssFeedURL),
+		feeds.NewRSSFeed("https://blog.waku.org/rss/"),
+		feeds.NewTwitterFeed(
+			os.Getenv("TWITTER_CONSUMER_KEY"),
+			os.Getenv("TWITTER_CONSUMER_SECRET"),
+			os.Getenv("TWITTER_ACCESS_TOKEN"),
+			os.Getenv("TWITTER_ACCESS_SECRET"),
+			"Waku_org"),
 		// TODO: Add GitHubFeed, TwitterFeed, etc.
 	}
 	seen := make(map[string]bool)
