@@ -25,28 +25,6 @@ Designed as a rhythmic bridge between decentralised messaging and the ever-chang
 
 ---
 
-## 📦 Project Structure
-
-```bash
-.
-├── feeds/
-│   ├── rss.go
-│   ├── github.go
-│   ├── farcaster.go
-│   ├── ethereum.go
-│   ├── snapshot.go
-│   └── ...
-├── waku/
-│   └── publisher.go
-├── internal/
-│   └── feeditem.go
-├── cmd/
-│   └── main.go
-└── README.md
-```
-
----
-
 ## 🧠 Architecture
 
 Each feed implements a simple interface:
