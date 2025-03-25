@@ -1,9 +1,13 @@
 package feeds
 
+// TODO Add Search Feed (instead of user timeline): Use client.Search.Tweets(&twitter.SearchTweetParams{...}).
+// TODO Rate limiting handling. Back off if the Twitter API returns a 429.
+// TODO Use a database or file cache instead of in-memory seen map for persistence.
+
 import (
 	"fmt"
-
 	"github.com/dghubble/go-twitter/twitter"
+
 	"github.com/dghubble/oauth1"
 )
 
