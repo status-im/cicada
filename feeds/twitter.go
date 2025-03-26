@@ -5,6 +5,7 @@ package feeds
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
@@ -55,6 +56,12 @@ func (t *TwitterProfileFeed) FetchItems() ([]FeedItem, error) {
 
 	var items []FeedItem
 	for _, tweet := range tweets {
+		img, err := extractTwitterImage(&tweet)
+		if err != nil {
+			log.Printf("twitter image fetch failed: %v", err)
+			return nil, err
+		}
+
 		if tweet.ID > t.lastSeenID {
 			t.lastSeenID = tweet.ID
 		}
@@ -64,6 +71,7 @@ func (t *TwitterProfileFeed) FetchItems() ([]FeedItem, error) {
 			Title:     tweet.FullText,
 			Link:      fmt.Sprintf("https://twitter.com/%s/status/%d", t.screenName, tweet.ID),
 			Timestamp: ts,
+			ImageData: img,
 		})
 	}
 	return items, nil
@@ -101,6 +109,12 @@ func (t *TwitterSearchFeed) FetchItems() ([]FeedItem, error) {
 
 	var items []FeedItem
 	for _, tweet := range result.Statuses {
+		img, err := extractTwitterImage(&tweet)
+		if err != nil {
+			log.Printf("twitter image fetch failed: %v", err)
+			return nil, err
+		}
+
 		if tweet.ID > t.lastSeenID {
 			t.lastSeenID = tweet.ID
 		}
@@ -110,7 +124,21 @@ func (t *TwitterSearchFeed) FetchItems() ([]FeedItem, error) {
 			Title:     tweet.FullText,
 			Link:      fmt.Sprintf("https://twitter.com/i/web/status/%d", tweet.ID),
 			Timestamp: ts,
+			ImageData: img,
 		})
 	}
 	return items, nil
+}
+
+func extractTwitterImage(tweet *twitter.Tweet) ([]byte, error) {
+	if tweet.ExtendedEntities == nil {
+		return nil, nil
+	}
+
+	for _, media := range tweet.ExtendedEntities.Media {
+		if media.Type == "photo" && media.MediaURLHttps != "" {
+			return fetchImageBytes(media.MediaURLHttps)
+		}
+	}
+	return nil, nil
 }
