@@ -21,7 +21,7 @@ type EthereumEventFeed struct {
 	client     *ethclient.Client
 }
 
-func NewEthereumEventFeed(rpcURL, contractAddr, eventSig string, startBlock uint64) (*EthereumEventFeed, error) {
+func NewEthereumEventFeed(rpcURL, contractAddr, eventSig string, startBlock uint64) (Feed, error) {
 	client, err := ethclient.Dial(rpcURL)
 	if err != nil {
 		return nil, err
