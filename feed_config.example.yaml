@@ -1,9 +1,18 @@
 $schema: ./feed_config.schema.yaml
 
+ethereum:
+  - rpc_url: https://rpc.example.com
+    contract: 0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85
+    event: Transfer(address,address,uint256)
+    start_block: 19600000
+
 rss:
   - url: https://blog.waku.org/rss/
   - url: https://github.com/waku-org/go-waku/releases.atom
   - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCAI6Gk0R_1aGa76ShKFA78Q
+
+snapshot:
+  - space: ens.eth
 
 twitter:
   credentials:
@@ -19,9 +28,3 @@ twitter:
       type: search
     - name: waku
       type: hashtag
-
-ethereum:
-  - rpc_url: https://rpc.example.com
-    contract: 0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85
-    event: Transfer(address,address,uint256)
-    start_block: 19600000

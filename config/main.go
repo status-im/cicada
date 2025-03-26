@@ -7,9 +7,10 @@ import (
 )
 
 type FeedConfig struct {
-	RSS      []RSSFeedConfig      `yaml:"rss"`
-	Twitter  TwitterConfig        `yaml:"twitter"`
 	Ethereum []EthereumFeedConfig `yaml:"ethereum"`
+	RSS      []RSSFeedConfig      `yaml:"rss"`
+	Snapshot []SnapshotFeedConfig `yaml:"snapshot"`
+	Twitter  TwitterConfig        `yaml:"twitter"`
 }
 
 func Read(path string) (FeedConfig, error) {
