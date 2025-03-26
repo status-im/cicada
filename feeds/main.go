@@ -7,6 +7,7 @@ type FeedItem struct {
 	Title     string
 	Link      string
 	Timestamp time.Time
+	//TODO: ImageData []byte // Add this later
 }
 
 type Feed interface {

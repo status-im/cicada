@@ -2,12 +2,30 @@ syntax = "proto3";
 
 package proto;
 
-// WakuFeedBroadcast is the payload structure sent over Waku
+option go_package = "github.com/status-im/cicadian/proto;proto";
+
+// WakuFeedBroadcast is the payload structure sent over Waku.
+// It is used to serialize feed items into messages that can be
+// transmitted over the Waku network in a verifiable, structured format.
 message WakuFeedBroadcast {
-  string id = 1;                   // Unique content ID
-  string title = 2;                // Title or summary
-  int64 timestamp = 3;            // Unix time in seconds
-  bytes image_data = 4;           // Raw binary image bytes
-  bytes message_hash = 5;         // Hash of the message content (for deduplication)
-  bytes sender_signature = 6;     // Signature by sender (optional)
+  // ID is a unique identifier for the feed item (e.g., tweet ID, GUID).
+  string id = 1;
+
+  // Title is a short summary or headline for the feed item.
+  string title = 2;
+
+  // Timestamp is the Unix time (in seconds) when the item was published.
+  int64 timestamp = 3;
+
+  // Link is the canonical source URL for the content (if available).
+  string link = 4;
+
+  // ImageData holds optional raw image bytes (e.g., JPEG/PNG/WebP).
+  bytes image_data = 5;
+
+  // MessageHash is a SHA-256 hash of the core message fields.
+  bytes message_hash = 6;
+
+  // SenderSignature is an optional digital signature by the publisher.
+  bytes sender_signature = 7;
 }

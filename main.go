@@ -2,20 +2,21 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
 	"github.com/status-im/cicadian/config"
 	"github.com/status-im/cicadian/feeds"
 	"github.com/status-im/cicadian/loader"
+	"github.com/status-im/cicadian/publisher"
 
 	waku "github.com/waku-org/go-waku/waku/v2/node"
 	"github.com/waku-org/go-waku/waku/v2/protocol/pb"
+	"google.golang.org/protobuf/proto"
 )
 
 const (
-	wakuContentTopic = "announcements"
+	wakuContentTopic = "cicadian_announcements"
 	pollInterval     = 5 * time.Minute
 )
 
@@ -58,17 +59,28 @@ func main() {
 }
 
 func publishToWaku(ctx context.Context, node *waku.WakuNode, item feeds.FeedItem) {
-	payload := fmt.Sprintf("Title: %s\nLink: %s\nPublishedAt: %s", item.Title, item.Link, item.Timestamp)
+	msg, err := publisher.ToProto(item)
+	if err != nil {
+		log.Printf("ToProto error: %v", err)
+		return
+	}
 
+	data, err := proto.Marshal(msg)
+	if err != nil {
+		log.Printf("MarshalBroadcast error: %v", err)
+		return
+	}
+
+	v := uint32(0)
 	ts := time.Now().UnixNano()
-	msg := &pb.WakuMessage{
-		Payload:      []byte(payload),
+	wakuMsg := &pb.WakuMessage{
+		Payload:      data,
 		ContentTopic: wakuContentTopic,
-		Version:      new(uint32),
+		Version:      &v,
 		Timestamp:    &ts,
 	}
 
-	msgHash, err := node.Relay().Publish(ctx, msg)
+	msgHash, err := node.Relay().Publish(ctx, wakuMsg)
 	if err != nil {
 		log.Println("Failed to publish to Waku:", err)
 	} else {

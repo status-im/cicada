@@ -1,9 +1,9 @@
-# 🪰👁️ Circadian
+# 🪰👁️ Cicadian
 
 ![42ef9cb0-1afc-4e48-9dc2-c7a41f0a0182 (1)](https://github.com/user-attachments/assets/c9392543-264b-4455-bc99-e63c9557b3b6)
 
 
-Circadian is a modular, minimalist Waku bot that listens to real-world and on-chain content feeds and relays them into [Waku](https://waku.org/) content topics.
+Cicadian is a modular, minimalist Waku bot that listens to real-world and on-chain content feeds and relays them into [Waku](https://waku.org/) content topics.
 
 Designed as a rhythmic bridge between decentralised messaging and the ever-changing web-curating signal from RSS, social, and Web3 event sources.
 
@@ -11,7 +11,7 @@ Designed as a rhythmic bridge between decentralised messaging and the ever-chang
 
 ## ✨ Features
 
-- ⏳ **Circadian rhythm**: Feeds poll on interval, in sync with natural or app-defined rhythms  
+- ⏳ **Cicadian rhythm**: Feeds poll on interval, in sync with natural or app-defined rhythms  
 - 🪐 **Pluggable feed types**:
   - RSS
   - Twitter/X
@@ -94,7 +94,7 @@ feeds := []Feed{
 Feeds are published to a specific Waku content topic, such as:
 
 ```
-/circadian/1/feed/proto
+/cicadian/1/feed/proto
 ```
 
 Messages are serialized as plaintext or protobuf.
