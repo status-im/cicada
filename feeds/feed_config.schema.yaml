@@ -1,0 +1,64 @@
+$schema: http://json-schema.org/draft-07/schema#
+title: Waku Circadian Feed Configuration
+type: object
+properties:
+  rss:
+    type: array
+    items:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+
+  twitter:
+    type: object
+    required: [credentials, targets]
+    properties:
+      credentials:
+        type: object
+        required:
+          - consumer_key_env
+          - consumer_secret_env
+          - access_token_env
+          - access_secret_env
+        properties:
+          consumer_key_env:
+            type: string
+          consumer_secret_env:
+            type: string
+          access_token_env:
+            type: string
+          access_secret_env:
+            type: string
+
+      targets:
+        type: array
+        items:
+          type: object
+          required: [name, type]
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+              enum: [profile, search, hashtag, list]
+
+  ethereum:
+    type: array
+    items:
+      type: object
+      required: [rpc_url, contract, event, start_block]
+      properties:
+        rpc_url:
+          type: string
+          format: uri
+        contract:
+          type: string
+          pattern: "^0x[a-fA-F0-9]{40}$"
+        event:
+          type: string
+        start_block:
+          type: integer
+          minimum: 0
