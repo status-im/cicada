@@ -11,7 +11,6 @@ func Load(cfg config.FeedConfig) ([]feeds.Feed, error) {
 	all = append(all, LoadRSSFeeds(cfg.RSS)...)
 	all = append(all, LoadTwitterFeeds(cfg.Twitter)...)
 
-	// TODO: Add Youtube feed (RSS)
 	// TODO: Add Reddit feed (JSON parsing)
 	// TODO: Add Snapshot DAO proposal feed
 	// TODO: Add Farcaster feed

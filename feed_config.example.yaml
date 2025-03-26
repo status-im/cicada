@@ -3,6 +3,7 @@ $schema: ./feed_config.schema.yaml
 rss:
   - url: https://blog.waku.org/rss/
   - url: https://github.com/waku-org/go-waku/releases.atom
+  - url: https://www.youtube.com/feeds/videos.xml?channel_id=UCAI6Gk0R_1aGa76ShKFA78Q
 
 twitter:
   credentials:
