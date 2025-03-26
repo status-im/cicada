@@ -28,13 +28,26 @@ func main() {
 	}
 
 	// Start the Waku node
-	if err := wakuNode.Start(context.Background()); err != nil {
+	err = wakuNode.Start(context.Background())
+	if err != nil {
 		log.Fatalf("Failed to start Waku node: %v", err)
 	}
 	defer wakuNode.Stop()
 
 	// Set up feeds
-	// TODO these are a bit hardcoded but we can make this more flexible later
+
+	// TODO: these are a bit hardcoded but we can make this more flexible later
+
+	ethereumFeed, err := feeds.NewEthereumEventFeed(
+		"https://your-favourite-evm-rpc-endpoint.dev",
+		"0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85", // ENS
+		"Transfer(address,address,uint256)",
+		19600000, // start block
+	)
+	if err != nil {
+		log.Fatalf("Failed to start ethereum rpc client : %v", err)
+	}
+
 	fs := []feeds.Feed{
 		feeds.NewRSSFeed("https://blog.waku.org/rss/"),
 		feeds.NewRSSFeed("https://github.com/waku-org/go-waku/releases.atom"),
@@ -44,9 +57,10 @@ func main() {
 			os.Getenv("TWITTER_ACCESS_TOKEN"),
 			os.Getenv("TWITTER_ACCESS_SECRET"),
 			"Waku_org"),
+		ethereumFeed,
+
 		// TODO: Add Youtube feed (RSS)
 		// TODO: Add Reddit feed (JSON parsing)
-		// TODO: Add ethereum contract events feed
 		// TODO: Add Snapshot DAO proposal feed
 		// TODO: Add Farcaster feed
 		// TODO: Add Bluesky feed
