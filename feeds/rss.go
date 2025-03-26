@@ -1,37 +1,44 @@
 package feeds
 
-import "github.com/mmcdole/gofeed"
+import (
+	"github.com/mmcdole/gofeed"
+)
 
 type RSSFeed struct {
-	URL    string
+	url    string
 	parser *gofeed.Parser
+	seen   map[string]bool
 }
 
-func NewRSSFeed(url string) *RSSFeed {
+func NewRSSFeed(url string) Feed {
 	return &RSSFeed{
-		URL:    url,
+		url:    url,
 		parser: gofeed.NewParser(),
+		seen:   make(map[string]bool),
 	}
 }
 
 func (r *RSSFeed) Name() string {
-	return r.URL
+	return "rss:" + r.url
 }
 
 func (r *RSSFeed) FetchItems() ([]FeedItem, error) {
-	rawFeed, err := r.parser.ParseURL(r.URL)
+	feed, err := r.parser.ParseURL(r.url)
 	if err != nil {
 		return nil, err
 	}
 
 	var items []FeedItem
-	for _, i := range rawFeed.Items {
-		items = append(items, FeedItem{
-			ID:        i.GUID,
-			Title:     i.Title,
-			Link:      i.Link,
-			Timestamp: *i.PublishedParsed,
-		})
+	for _, entry := range feed.Items {
+		if !r.seen[entry.GUID] {
+			r.seen[entry.GUID] = true
+			items = append(items, FeedItem{
+				ID:        entry.GUID,
+				Title:     entry.Title,
+				Link:      entry.Link,
+				Timestamp: *entry.PublishedParsed,
+			})
+		}
 	}
 	return items, nil
 }

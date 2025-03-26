@@ -7,8 +7,8 @@ import (
 
 func Load(cfg config.FeedConfig) ([]feeds.Feed, error) {
 	var all []feeds.Feed
+	all = append(all, LoadRSSFeeds(cfg.RSS)...)
 	all = append(all, LoadTwitterFeeds(cfg.Twitter)...)
-	// TODO: all = append(all, LoadRSSFeeds(cfg.RSS)...)
 	// TODO: all = append(all, LoadEthereumFeeds(cfg.Ethereum)...)
 
 	// TODO: Add Youtube feed (RSS)

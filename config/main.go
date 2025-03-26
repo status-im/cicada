@@ -3,7 +3,7 @@ package config
 import (
 	"os"
 
-	yaml "gopkg.in/yaml.v3"
+	"gopkg.in/yaml.v3"
 )
 
 type FeedConfig struct {
