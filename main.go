@@ -37,13 +37,20 @@ func main() {
 	// TODO these are a bit hardcoded but we can make this more flexible later
 	fs := []feeds.Feed{
 		feeds.NewRSSFeed("https://blog.waku.org/rss/"),
+		feeds.NewRSSFeed("https://github.com/waku-org/go-waku/releases.atom"),
 		feeds.NewTwitterFeed(
 			os.Getenv("TWITTER_CONSUMER_KEY"),
 			os.Getenv("TWITTER_CONSUMER_SECRET"),
 			os.Getenv("TWITTER_ACCESS_TOKEN"),
 			os.Getenv("TWITTER_ACCESS_SECRET"),
 			"Waku_org"),
-		// TODO: Add GitHubFeed, TwitterFeed, etc.
+		// TODO: Add Youtube feed (RSS)
+		// TODO: Add Reddit feed (JSON parsing)
+		// TODO: Add ethereum contract events feed
+		// TODO: Add Snapshot DAO proposal feed
+		// TODO: Add Farcaster feed
+		// TODO: Add Bluesky feed
+		// TODO: Add Lens Protocol feed
 	}
 	seen := make(map[string]bool)
 
