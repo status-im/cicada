@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 	"time"
 )
 
@@ -32,6 +33,7 @@ func (s *SnapshotFeed) FetchItems() ([]FeedItem, error) {
 		Proposals []struct {
 			ID      string `json:"id"`
 			Title   string `json:"title"`
+			Body    string `json:"body"`
 			Created int64  `json:"created"`
 		} `json:"proposals"`
 	}
@@ -42,6 +44,12 @@ func (s *SnapshotFeed) FetchItems() ([]FeedItem, error) {
 
 	var items []FeedItem
 	for _, p := range data.Proposals {
+		imageURL := extractFirstImageURL(p.Body)
+		var imageData []byte
+		if imageURL != "" {
+			imageData, _ = fetchImageBytes(imageURL)
+		}
+
 		t := time.Unix(p.Created, 0)
 		if t.After(s.lastSeen) {
 			s.lastSeen = t
@@ -50,9 +58,25 @@ func (s *SnapshotFeed) FetchItems() ([]FeedItem, error) {
 				Title:     p.Title,
 				Link:      fmt.Sprintf("https://snapshot.org/#/%s/proposal/%s", s.space, p.ID),
 				Timestamp: t,
+				ImageData: imageData,
 			})
 		}
 	}
 
 	return items, nil
+}
+
+var (
+	markdownImageRegex = regexp.MustCompile(`!\[[^\]]*\]\(([^)]+)\)`)
+	htmlImageRegex     = regexp.MustCompile(`<img[^>]+src="([^">]+)"`)
+)
+
+func extractFirstImageURL(content string) string {
+	if match := markdownImageRegex.FindStringSubmatch(content); len(match) > 1 {
+		return match[1]
+	}
+	if match := htmlImageRegex.FindStringSubmatch(content); len(match) > 1 {
+		return match[1]
+	}
+	return ""
 }
