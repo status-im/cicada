@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"regexp"
 	"time"
 )
 
@@ -64,19 +63,4 @@ func (s *SnapshotFeed) FetchItems() ([]FeedItem, error) {
 	}
 
 	return items, nil
-}
-
-var (
-	markdownImageRegex = regexp.MustCompile(`!\[[^\]]*\]\(([^)]+)\)`)
-	htmlImageRegex     = regexp.MustCompile(`<img[^>]+src="([^">]+)"`)
-)
-
-func extractFirstImageURL(content string) string {
-	if match := markdownImageRegex.FindStringSubmatch(content); len(match) > 1 {
-		return match[1]
-	}
-	if match := htmlImageRegex.FindStringSubmatch(content); len(match) > 1 {
-		return match[1]
-	}
-	return ""
 }

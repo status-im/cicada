@@ -73,13 +73,17 @@ func extractImageData(entry *gofeed.Item) ([]byte, error) {
 		}
 	}
 
+	// Fallback: parse Markdown or HTML from content/description
+	if imageURL == "" {
+		imageURL = extractFirstImageURL(entry.Content)
+	}
+	if imageURL == "" {
+		imageURL = extractFirstImageURL(entry.Description)
+	}
+
 	if imageURL == "" {
 		return nil, nil
 	}
 
-	data, err := fetchImageBytes(imageURL)
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
+	return fetchImageBytes(imageURL)
 }
