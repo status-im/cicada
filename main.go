@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
+	"github.com/status-im/cicadian/config"
 	"github.com/status-im/cicadian/feeds"
+	"github.com/status-im/cicadian/loader"
 
 	waku "github.com/waku-org/go-waku/waku/v2/node"
 	"github.com/waku-org/go-waku/waku/v2/protocol/pb"
@@ -35,39 +36,17 @@ func main() {
 	defer wakuNode.Stop()
 
 	// Set up feeds
-
-	// TODO: these are a bit hardcoded but we can make this more flexible later
-
-	ethereumFeed, err := feeds.NewEthereumEventFeed(
-		"https://your-favourite-evm-rpc-endpoint.dev",
-		"0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85", // ENS
-		"Transfer(address,address,uint256)",
-		19600000, // start block
-	)
+	cfg, err := config.Read("feed_config.example.yaml")
 	if err != nil {
-		log.Fatalf("Failed to start ethereum rpc client : %v", err)
+		log.Fatalf("Failed to read config: %v", err)
 	}
 
-	fs := []feeds.Feed{
-		feeds.NewRSSFeed("https://blog.waku.org/rss/"),
-		feeds.NewRSSFeed("https://github.com/waku-org/go-waku/releases.atom"),
-		feeds.NewTwitterFeed(
-			os.Getenv("TWITTER_CONSUMER_KEY"),
-			os.Getenv("TWITTER_CONSUMER_SECRET"),
-			os.Getenv("TWITTER_ACCESS_TOKEN"),
-			os.Getenv("TWITTER_ACCESS_SECRET"),
-			"Waku_org"),
-		ethereumFeed,
-
-		// TODO: Add Youtube feed (RSS)
-		// TODO: Add Reddit feed (JSON parsing)
-		// TODO: Add Snapshot DAO proposal feed
-		// TODO: Add Farcaster feed
-		// TODO: Add Bluesky feed
-		// TODO: Add Lens Protocol feed
+	fs, err := loader.Load(cfg)
+	if err != nil {
+		log.Fatalf("Failed to load config: %v", err)
 	}
+
 	seen := make(map[string]bool)
-
 	for {
 		for _, feed := range fs {
 			PollFeed(feed, seen, func(item feeds.FeedItem) {

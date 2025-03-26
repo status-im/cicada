@@ -5,8 +5,10 @@ go 1.21.11
 require (
 	github.com/dghubble/go-twitter v0.0.0-20221104224141-912508c3888b
 	github.com/dghubble/oauth1 v0.7.3
+	github.com/ethereum/go-ethereum v1.10.26
 	github.com/mmcdole/gofeed v1.3.0
 	github.com/waku-org/go-waku v0.9.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -29,7 +31,6 @@ require (
 	github.com/dghubble/sling v1.4.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/elastic/gosigar v0.14.2 // indirect
-	github.com/ethereum/go-ethereum v1.10.26 // indirect
 	github.com/flynn/noise v1.0.0 // indirect
 	github.com/francoispqt/gojay v1.2.13 // indirect
 	github.com/go-ole/go-ole v1.2.1 // indirect

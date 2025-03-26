@@ -18,7 +18,7 @@ const (
 	TwitterProfile TwitterTargetType = "profile"
 	TwitterSearch  TwitterTargetType = "search"
 	TwitterHashtag TwitterTargetType = "hashtag"
-	TwitterList    TwitterTargetType = "list"
+	TwitterList    TwitterTargetType = "list" //TODO: Implementation
 )
 
 type TwitterTargetConfig struct {
