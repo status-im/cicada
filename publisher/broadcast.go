@@ -15,11 +15,15 @@ func ToProto(item feeds.FeedItem) (*broadcastpb.WakuFeedBroadcast, error) {
 		Title:     item.Title,
 		Timestamp: item.Timestamp.Unix(),
 		Link:      item.Link,
+		ImageData: item.ImageData,
 	}
 
-	// Compute a simple hash of key fields
-	hash := sha256.Sum256([]byte(item.ID + item.Title + item.Timestamp.Format(time.RFC3339)))
-	msg.MessageHash = hash[:]
+	// Construct hash input using all core fields
+	hashInput := item.ID + item.Title + item.Link + item.Timestamp.Format(time.RFC3339)
+	hash := sha256.New()
+	hash.Write([]byte(hashInput))
+	hash.Write(item.ImageData) // Include image bytes
+	msg.MessageHash = hash.Sum(nil)
 
 	return msg, nil
 }

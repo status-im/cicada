@@ -1,7 +1,10 @@
 package feeds
 
 import (
+	"github.com/ethereum/go-ethereum/log"
 	"github.com/mmcdole/gofeed"
+	"strings"
+	"time"
 )
 
 type RSSFeed struct {
@@ -30,15 +33,53 @@ func (r *RSSFeed) FetchItems() ([]FeedItem, error) {
 
 	var items []FeedItem
 	for _, entry := range feed.Items {
-		if !r.seen[entry.GUID] {
-			r.seen[entry.GUID] = true
-			items = append(items, FeedItem{
-				ID:        entry.GUID,
-				Title:     entry.Title,
-				Link:      entry.Link,
-				Timestamp: *entry.PublishedParsed,
-			})
+		if r.seen[entry.GUID] {
+			continue
 		}
+		r.seen[entry.GUID] = true
+
+		i, err := extractImageData(entry)
+		if err != nil {
+			log.Error("failed to fetch image", "link", entry.Link, "error", err)
+		}
+
+		ts := time.Now()
+		if entry.PublishedParsed != nil {
+			ts = *entry.PublishedParsed
+		}
+
+		items = append(items, FeedItem{
+			ID:        entry.GUID,
+			Title:     entry.Title,
+			Link:      entry.Link,
+			Timestamp: ts,
+			ImageData: i,
+		})
 	}
 	return items, nil
+}
+
+func extractImageData(entry *gofeed.Item) ([]byte, error) {
+	var imageURL string
+
+	if entry.Image != nil && entry.Image.URL != "" {
+		imageURL = entry.Image.URL
+	} else {
+		for _, enc := range entry.Enclosures {
+			if strings.HasPrefix(enc.Type, "image/") {
+				imageURL = enc.URL
+				break
+			}
+		}
+	}
+
+	if imageURL == "" {
+		return nil, nil
+	}
+
+	data, err := fetchImageBytes(imageURL)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
