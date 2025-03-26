@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package proto;
+
+// WakuFeedBroadcast is the payload structure sent over Waku
+message WakuFeedBroadcast {
+  string id = 1;                   // Unique content ID
+  string title = 2;                // Title or summary
+  int64 timestamp = 3;            // Unix time in seconds
+  bytes image_data = 4;           // Raw binary image bytes
+  bytes message_hash = 5;         // Hash of the message content (for deduplication)
+  bytes sender_signature = 6;     // Signature by sender (optional)
+}
