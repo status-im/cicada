@@ -4,6 +4,57 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
+## Signature Support
+
+### Sender Signature
+- **Goal**: Use cryptographic signatures to verify authenticity of each broadcast.
+- **Tasks**:
+  - Sign each `WakuFeedBroadcast` with a private key (e.g., Ethereum).
+  - Store the signature in `sender_signature`.
+  - (Optional) Provide a verification helper or guide for consumers.
+
+---
+
+## Waku Message Formatting Standard
+
+- **Goal**: Define or adopt a standard structure for messages sent over Waku.
+- **Tasks**:
+  - Ensure `WakuFeedBroadcast` includes all necessary fields (ID, timestamp, link, image data, etc.).
+  - Consistently include optional fields (e.g., `sender_signature`) when available.
+  - Document the format so third-party tools can parse it reliably.
+
+---
+
+## Listener Specification for App Integration
+
+- **Goal**: Define how the Status app or similar clients manage and connect to Cicadian-type broadcasts.
+- **Tasks**:
+  - Finalise the **listener spec**, treating it as a “local bot type” (e.g., `type: listener`) that subscribes to broadcast channels.
+  - Integrate with Flexsurfer’s **timeline and claimed-channel model** for persistent feed discovery and subscription.
+  - Specify how subscriptions are stored, verified, and displayed to the user in a privacy-conscious manner.
+
+---
+
+## RLN & Rate Limit Strategy
+
+- **Goal**: Explore integration of RLN (Rate-Limit Nullifier) for fair message broadcasting across Cicadian instances.
+- **Tasks**:
+  - Investigate `go-waku` support for RLN and determine feasibility for bots.
+  - Prototype configurable rate tiers for low vs. high-throughput publishers.
+  - Evaluate decentralised enforcement models — or document why such enforcement may be impractical in a fully open setup.
+
+---
+
+## Content Topic Privacy Enhancements
+
+- **Goal**: Prevent topic-based interest leakage via reverse-engineering hashed topics.
+- **Tasks**:
+  - Implement **bucketed content topics** or **ephemeral per-session topics** to reduce correlation.
+  - Explore dynamic key rotation or salt usage when hashing topic names.
+  - Provide tooling or conventions for topic privacy hardening.
+
+---
+
 ## Twitter Enhancements
 
 ### Twitter List Support
@@ -71,17 +122,6 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## Signature Support
-
-### Sender Signature
-- **Goal**: Use cryptographic signatures to verify authenticity of each broadcast.
-- **Tasks**:
-    - Sign each `WakuFeedBroadcast` with a private key (e.g., Ethereum).
-    - Store the signature in `sender_signature`.
-    - (Optional) Provide a verification helper or guide for consumers.
-
----
-
 ## Caching & Deduplication
 
 ### Persistent State Tracking
@@ -133,16 +173,6 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## Waku Message Formatting Standard
-
-- **Goal**: Define or adopt a standard structure for messages sent over Waku.
-- **Tasks**:
-    - Ensure `WakuFeedBroadcast` includes all necessary fields (ID, timestamp, link, image data, etc.).
-    - Consistently include optional fields (e.g., `sender_signature`) when available.
-    - Document the format so third-party tools can parse it reliably.
-
----
-
 ## Documentation & Testing
 
 - **Goal**: Ensure reliability, clarity, and ease of use.
@@ -152,14 +182,6 @@ This document outlines upcoming features, improvements, and integrations for **C
     - Provide clear examples or a quick-start guide for each feed type.
 
 ---
-
-## Listener Specification for App Integration
-
-- **Goal**: Define how the Status app or similar clients manage and connect to Cicadian-type broadcasts.
-- **Tasks**:
-  - Finalise the **listener spec**, treating it as a “local bot type” (e.g., `type: listener`) that subscribes to broadcast channels.
-  - Integrate with Flexsurfer’s **timeline and claimed-channel model** for persistent feed discovery and subscription.
-  - Specify how subscriptions are stored, verified, and displayed to the user in a privacy-conscious manner.
 
 ## Privacy Controls and HTTP Access Policy
 
@@ -171,21 +193,6 @@ This document outlines upcoming features, improvements, and integrations for **C
   - Introduce a permission system (inspired by mobile OSes) to explicitly **allow/deny** HTTP calls per feed or plugin.
   - Document and optionally expose logs of any HTTP interactions (source, timing, target host).
 
-## RLN & Rate Limit Strategy
-
-- **Goal**: Explore integration of RLN (Rate-Limit Nullifier) for fair message broadcasting across Cicadian instances.
-- **Tasks**:
-  - Investigate `go-waku` support for RLN and determine feasibility for bots.
-  - Prototype configurable rate tiers for low vs. high-throughput publishers.
-  - Evaluate decentralised enforcement models — or document why such enforcement may be impractical in a fully open setup.
-
-## Content Topic Privacy Enhancements
-
-- **Goal**: Prevent topic-based interest leakage via reverse-engineering hashed topics.
-- **Tasks**:
-  - Implement **bucketed content topics** or **ephemeral per-session topics** to reduce correlation.
-  - Explore dynamic key rotation or salt usage when hashing topic names.
-  - Provide tooling or conventions for topic privacy hardening.
-
+---
 
 _We welcome feedback and contributions! If you have suggestions or encounter issues, please open an [issue](https://github.com/status-im/cicadian/issues) or submit a pull request._
