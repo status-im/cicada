@@ -4,7 +4,7 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## 1. Twitter Enhancements
+## Twitter Enhancements
 
 ### Twitter List Support
 - **Goal**: Add the ability to fetch and broadcast tweets from specific Twitter Lists.
@@ -28,7 +28,7 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## 2. Ethereum Logs Improvements
+## Ethereum Logs Improvements
 
 ### Block Timestamp Caching
 - **Goal**: Reduce repeated RPC calls by caching block numbers and their corresponding timestamps.
@@ -71,7 +71,7 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## 4. Signature Support
+## Signature Support
 
 ### Sender Signature
 - **Goal**: Use cryptographic signatures to verify authenticity of each broadcast.
@@ -82,7 +82,7 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## 5. Caching & Deduplication
+## Caching & Deduplication
 
 ### Persistent State Tracking
 - **Goal**: Standardise how the system remembers and avoids broadcasting the same item multiple times.
@@ -93,7 +93,7 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## 6. Poll Intervals
+## Poll Intervals
 
 ### User-Defined Poll Intervals
 - **Goal**: Allow custom scheduling so users can choose how frequently each feed is polled.
@@ -104,7 +104,7 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## 7. Configuration & CLI
+## Configuration & CLI
 
 - **Goal**: Offer flexible runtime configuration and command-line options.
 - **Tasks**:
@@ -114,7 +114,7 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## 8. Dynamic Topic Routing
+## Dynamic Topic Routing
 
 - **Goal**: Allow different feed types or categories to broadcast over distinct Waku topics.
 - **Tasks**:
@@ -124,7 +124,7 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## 9. UI or Dashboard Integration
+## UI or Dashboard Integration
 
 - **Goal**: Provide a simple interface or dashboard to inspect the status of each feed, last broadcast times, and any errors.
 - **Tasks**:
@@ -133,7 +133,7 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## 10. Waku Message Formatting Standard
+## Waku Message Formatting Standard
 
 - **Goal**: Define or adopt a standard structure for messages sent over Waku.
 - **Tasks**:
@@ -143,7 +143,7 @@ This document outlines upcoming features, improvements, and integrations for **C
 
 ---
 
-## 11. Documentation & Testing
+## Documentation & Testing
 
 - **Goal**: Ensure reliability, clarity, and ease of use.
 - **Tasks**:
@@ -152,5 +152,40 @@ This document outlines upcoming features, improvements, and integrations for **C
     - Provide clear examples or a quick-start guide for each feed type.
 
 ---
+
+## Listener Specification for App Integration
+
+- **Goal**: Define how the Status app or similar clients manage and connect to Cicadian-type broadcasts.
+- **Tasks**:
+  - Finalise the **listener spec**, treating it as a “local bot type” (e.g., `type: listener`) that subscribes to broadcast channels.
+  - Integrate with Flexsurfer’s **timeline and claimed-channel model** for persistent feed discovery and subscription.
+  - Specify how subscriptions are stored, verified, and displayed to the user in a privacy-conscious manner.
+
+## Privacy Controls and HTTP Access Policy
+
+> Note: This may be out of scope for the Cicadian repo itself, but should be considered a requirement for any app integrating it.
+
+- **Goal**: Minimise user exposure to external networks and provide transparency over HTTP usage.
+- **Tasks**:
+  - Classify each feed as `offline`, `online`, or `hybrid` based on HTTP call needs.
+  - Introduce a permission system (inspired by mobile OSes) to explicitly **allow/deny** HTTP calls per feed or plugin.
+  - Document and optionally expose logs of any HTTP interactions (source, timing, target host).
+
+## RLN & Rate Limit Strategy
+
+- **Goal**: Explore integration of RLN (Rate-Limit Nullifier) for fair message broadcasting across Cicadian instances.
+- **Tasks**:
+  - Investigate `go-waku` support for RLN and determine feasibility for bots.
+  - Prototype configurable rate tiers for low vs. high-throughput publishers.
+  - Evaluate decentralised enforcement models — or document why such enforcement may be impractical in a fully open setup.
+
+## Content Topic Privacy Enhancements
+
+- **Goal**: Prevent topic-based interest leakage via reverse-engineering hashed topics.
+- **Tasks**:
+  - Implement **bucketed content topics** or **ephemeral per-session topics** to reduce correlation.
+  - Explore dynamic key rotation or salt usage when hashing topic names.
+  - Provide tooling or conventions for topic privacy hardening.
+
 
 _We welcome feedback and contributions! If you have suggestions or encounter issues, please open an [issue](https://github.com/status-im/cicadian/issues) or submit a pull request._
